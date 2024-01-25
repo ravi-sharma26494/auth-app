@@ -28,6 +28,8 @@ export async function POST(request: NextRequest) {
         }
 
         // create a token and send secure cookie to the user
+
+        // the token data that we will be sending to the user
         const tokenData = {
             id: isUser._id,
             username: isUser.username,
@@ -35,19 +37,19 @@ export async function POST(request: NextRequest) {
 
         }
 
+        // creation of token with jwt
         const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1d' });
+
+        // creation of the response object
         const response = NextResponse.json({
             message: "Login successful",
             success: true
-        })
-        response.cookies.set(
-            "token",
-            token,
-            {
-                httpOnly: true,
-            }
-        );
+        });
 
+        // attaching the cookies to the response
+        response.cookies.set("token", token, { httpOnly: true, });
+
+        // sending the response back
         return response;
 
     } catch (error: any) {
